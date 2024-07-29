@@ -1,6 +1,6 @@
 import React from "react";
 import { useRef, useState, useEffect } from "react";
-import axios from "./api/axios";
+import axios from "../api/axios";
 import {
   faCheck,
   faTimes,

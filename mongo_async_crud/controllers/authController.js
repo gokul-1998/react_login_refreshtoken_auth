@@ -10,7 +10,9 @@ const handleLogin = async (req, res) => {
     if (!foundUser) return res.sendStatus(401); //Unauthorized 
     // evaluate password 
     const match = await bcrypt.compare(pwd, foundUser.password);
+    console.log(match,"zzzzzz");
     if (match) {
+        console.log("match");
         const roles = Object.values(foundUser.roles).filter(Boolean);
         // this filter is for eliminating the null values from the array
         // create JWTs
@@ -36,11 +38,14 @@ const handleLogin = async (req, res) => {
         const result = await foundUser.save();
         console.log(result);
         console.log(roles);
+        console.log("bbbbbbbbbb")
+
 
         // Creates Secure Cookie with refresh token
         res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
         // Send authorization roles and access token to user
+        console.log("aaaaaaaaaaaaaaa")
         res.json({ roles, accessToken });
 
     } else {
