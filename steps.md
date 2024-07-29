@@ -15,3 +15,5 @@
     ./setup.sh
 
     ```
+
+- https://chatgpt.com/share/2eb1d4a6-e0c1-478f-b526-405dfd020d9c
