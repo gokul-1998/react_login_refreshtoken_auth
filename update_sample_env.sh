@@ -1,12 +1,17 @@
 #!/bin/bash
 
-# Find all .env files in the repository
-find . -type f -name '.env' | while read ENV_FILE; do
-  # Define the path for the corresponding sample.env file
-  SAMPLE_ENV_FILE="\$(dirname "\$ENV_FILE")/sample.env"
+# Function to create or update sample.env
+create_sample_env() {
+    local env_file="$1"
+    local sample_file="${env_file%.env}.sample.env"
 
-  # Create or update the sample.env file
-  awk -F '=' '/=/ { print $1 "=" }' "\$ENV_FILE" > "\$SAMPLE_ENV_FILE"
+    if [ -f "$env_file" ]; then
+        # Create sample.env by stripping values
+        awk -F'=' '{print $1"="}' "$env_file" > "$sample_file"
+    fi
+}
 
-  echo "\$SAMPLE_ENV_FILE has been updated."
+# Find all .env files and create/update sample.env files
+find . -name ".env" | while read -r env_file; do
+    create_sample_env "$env_file"
 done

@@ -1,43 +1,32 @@
 #!/bin/bash
 
-# Define the script name and the Git pre-commit hook path
-UPDATE_SCRIPT="update_sample_env.sh"
-PRE_COMMIT_HOOK=".git/hooks/pre-commit"
-
-# Create the update_sample_env.sh script
-cat << 'EOF' > $UPDATE_SCRIPT
+# Create the update script
+cat << 'EOF' > update_sample_env.sh
 #!/bin/bash
 
-# Find all .env files in the repository
-find . -type f -name '.env' | while read ENV_FILE; do
-  # Define the path for the corresponding sample.env file
-  SAMPLE_ENV_FILE="\$(dirname "\$ENV_FILE")/sample.env"
+# Function to create or update sample.env
+create_sample_env() {
+    local env_file="$1"
+    local sample_file="${env_file%.env}.sample.env"
 
-  # Create or update the sample.env file
-  awk -F '=' '/=/ { print $1 "=" }' "\$ENV_FILE" > "\$SAMPLE_ENV_FILE"
+    if [ -f "$env_file" ]; then
+        # Create sample.env by stripping values
+        awk -F'=' '{print $1"="}' "$env_file" > "$sample_file"
+    fi
+}
 
-  echo "\$SAMPLE_ENV_FILE has been updated."
+# Find all .env files and create/update sample.env files
+find . -name ".env" | while read -r env_file; do
+    create_sample_env "$env_file"
 done
 EOF
 
-# Make the update_sample_env.sh script executable
-chmod +x $UPDATE_SCRIPT
+# Make the update script executable
+chmod +x update_sample_env.sh
 
-# Check if the .git/hooks directory exists
-if [ ! -d ".git/hooks" ]; then
-  echo "No .git/hooks directory found. Make sure you're in a Git repository."
-  exit 1
-fi
+# Add a pre-commit hook to run the update script
+HOOKS_DIR=$(git rev-parse --show-toplevel)/.git/hooks
+echo -e "#!/bin/bash\n./update_sample_env.sh" > "$HOOKS_DIR/pre-commit"
+chmod +x "$HOOKS_DIR/pre-commit"
 
-# Create the pre-commit hook
-cat << EOF > $PRE_COMMIT_HOOK
-#!/bin/bash
-
-# Run the update_sample_env.sh script before commit
-./$UPDATE_SCRIPT
-EOF
-
-# Make the pre-commit hook executable
-chmod +x $PRE_COMMIT_HOOK
-
-echo "Setup complete. The update_sample_env.sh script will run before each commit."
+echo "Setup complete. The update_sample_env.sh script has been created and added as a pre-commit hook."
