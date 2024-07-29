@@ -12,7 +12,9 @@ const handleLogin = async (req, res) => {
     const match = await bcrypt.compare(pwd, foundUser.password);
     if (match) {
         const roles = Object.values(foundUser.roles).filter(Boolean);
+        // this filter is for eliminating the null values from the array
         // create JWTs
+        console.log(process.env.ACCESS_TOKEN_SECRET,"access token secret");
         const accessToken = jwt.sign(
             {
                 "UserInfo": {
@@ -23,6 +25,7 @@ const handleLogin = async (req, res) => {
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: '10s' }
         );
+        console.log(process.env.REFRESH_TOKEN_SECRET,"refresh token secret");
         const refreshToken = jwt.sign(
             { "username": foundUser.username },
             process.env.REFRESH_TOKEN_SECRET,

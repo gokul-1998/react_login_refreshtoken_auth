@@ -8,3 +8,10 @@
     npm install --save @fortawesome/free-solid-svg-icons
     npm install --save @fortawesome/react-fontawesome
     ```
+
+- copy and paste the setup.sh and run
+    ```
+    chmod +x setup.sh
+    ./setup.sh
+
+    ```
