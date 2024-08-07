@@ -9,7 +9,6 @@ const Admin = () => {
       <br />
       <Users/>
       <br />
-      <p>You must have been assigned an Admin role.</p>
       <div className="flexGrow">
         <Link to="/">Home</Link>
       </div>

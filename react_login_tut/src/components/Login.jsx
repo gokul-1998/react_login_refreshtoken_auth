@@ -43,7 +43,7 @@ const Login = () => {
         },
         withCredentials: true,
       });
-      console.log(JSON.stringify(res?.data));
+      console.log(res?.data);
       // console.log(JSON.stringify(res));
       const accessToken = res?.data?.accessToken;
       const roles = res?.data?.roles;
