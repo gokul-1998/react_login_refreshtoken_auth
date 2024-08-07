@@ -7,6 +7,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 
+import useInput  from "../hooks/useInput";
+
 import axios from "../api/axios";
 const LOGIN_URL = "/auth";
 
@@ -22,7 +24,7 @@ const Login = () => {
   const userRef = useRef(null);
   const errRef = useRef(null);
 
-  const [user, setUser] =  useLocalStorage('user','') //useState("");
+  const [user, resetUser,userAttribs] =  useInput('user',"") //useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
@@ -49,7 +51,8 @@ const Login = () => {
       const roles = res?.data?.roles;
       setAuth({ user, pwd, roles, accessToken });
 
-      setUser("");
+      // setUser("");
+      resetUser()
       setPwd("");
       navigate(from, { replace: true });
     } catch (err) {
@@ -93,8 +96,7 @@ const Login = () => {
           ref={userRef}
           //   this is used , when we load the page, the cursor will be in the username field
           autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
+          {...userAttribs}
           required
         />
         <label htmlFor="password">Password:</label>
