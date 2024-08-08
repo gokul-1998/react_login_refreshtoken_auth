@@ -50,7 +50,7 @@ const Login = () => {
       // console.log(JSON.stringify(res));
       const accessToken = res?.data?.accessToken;
       const roles = res?.data?.roles;
-      setAuth({ user, pwd, roles, accessToken });
+      setAuth({ user, roles, accessToken });
 
       // setUser("");
       resetUser()
