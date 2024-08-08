@@ -35,7 +35,6 @@ const Login = () => {
             navigate('/welcome')
         } catch (err) {
             if (!err?.originalStatus) {
-                // isLoading: true until timeout occurs
                 setErrMsg('No Server Response');
             } else if (err.originalStatus === 400) {
                 setErrMsg('Missing Username or Password');
@@ -44,13 +43,15 @@ const Login = () => {
             } else {
                 setErrMsg('Login Failed');
             }
-            errRef.current.focus();
+            if (errRef.current) {
+                errRef.current.focus();
+            }
         }
-    }
+    };
 
-    const handleUserInput = (e) => setUser(e.target.value)
+    const handleUserInput = (e) => setUser(e.target.value);
 
-    const handlePwdInput = (e) => setPwd(e.target.value)
+    const handlePwdInput = (e) => setPwd(e.target.value);
 
     const content = isLoading ? <h1>Loading...</h1> : (
         <section className="login">
