@@ -5,6 +5,8 @@ from .serializers import EmployeeSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
 import jwt
+from django.contrib.auth.hashers import check_password
+
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -40,9 +42,7 @@ def handle_login(request):
     try:
         user = User.objects.get(username=username)
         print(user)
-        hashed_password = make_password(password)
-        print(user.password== hashed_password)
-        if user.password == hashed_password:  # You should hash and compare passwords in a real app
+        if check_password(password, user.password):  # You should hash and compare passwords in a real app
             access_token = jwt.encode({'username': user.username}, settings.ACCESS_TOKEN_SECRET, algorithm='HS256')
             refresh_token = jwt.encode({'username': user.username}, settings.REFRESH_TOKEN_SECRET, algorithm='HS256')
             return Response({'access_token': access_token, 'refresh_token': refresh_token})
